@@ -1,0 +1,7 @@
+.svelte-kit/
+.vscode/
+node_modules/
+.dockerignore
+.gitignore
+README.md
+```
