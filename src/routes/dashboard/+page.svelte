@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Stage, Layer, Rect, Transformer, Image, Text } from 'svelte-konva';
-	import Konva from 'konva';
 	import type { Transformer as TransformerType } from 'konva/lib/shapes/Transformer';
 	import type { Image as ImageType } from 'konva/lib/shapes/Image';
 	import type { Rect as RectType } from 'konva/lib/shapes/Rect';
 	import type { Layer as LayerType } from 'konva/lib/Layer';
 	import { onMount } from 'svelte';
+	import type { KonvaEventObject } from 'konva/lib/Node';
 
 	onMount(() => {
 		const img = document.createElement('img');
@@ -86,7 +86,7 @@
 	let transformer: TransformerType;
 	let selectedShapeName = '';
 
-	function handleStageMouseDown(e: CustomEvent<Konva.KonvaEventObject<MouseEvent | TouchEvent>>) {
+	function handleStageMouseDown(e: CustomEvent<KonvaEventObject<MouseEvent | TouchEvent>>) {
 		const konvaEvent = e.detail;
 		// clicked on stage - clear selection
 		if (konvaEvent.target === konvaEvent.target.getStage()) {
@@ -146,8 +146,11 @@
 	}
 </script>
 
+{window.innerHeight}
+{window.innerWidth}
 <Stage
-	config={{ width: window.innerWidth, height: window.innerHeight }}
+	class="bg-gray-600"
+	config={{ width: 976, height: 800, x: 10, y: 10 }}
 	on:mousedown={handleStageMouseDown}
 	on:touchstart={handleStageMouseDown}
 >
