@@ -63,6 +63,7 @@
 				image: img
 			}
 		];
+		console.log({ canvasParentDiv });
 	});
 	interface konvaShapeType {
 		type: string;
@@ -132,6 +133,7 @@
 
 		if (selectedNode) {
 			// attach to another node
+			selectedNode.moveToTop();
 			transformer.nodes([selectedNode]);
 		} else {
 			// remove transformer
@@ -144,28 +146,37 @@
 	function handleDelete(event: Event) {
 		renderKonva.remove();
 	}
+	let canvasParentDiv: HTMLDivElement;
 </script>
 
-{window.innerHeight}
-{window.innerWidth}
-<Stage
-	class="bg-gray-600"
-	config={{ width: 976, height: 800, x: 10, y: 10 }}
-	on:mousedown={handleStageMouseDown}
-	on:touchstart={handleStageMouseDown}
->
-	<Layer bind:handle={layerKonva}>
-		{#each konvaShapes as konvaShape}
-			{#if konvaShape.type === 'rect'}
-				<Rect config={konvaShape} on:transformend={handleTransformEnd} />
-			{:else if konvaShape.type === 'image' && konvaShape.image}
-				<Image config={konvaShape} on:transformend={handleTransformEnd} />
-			{:else if konvaShape.type === 'text' && konvaShape.image}
-				<Text config={konvaShape} on:transformend={handleTransformEnd} />
-			{/if}
-		{/each}
-		<Transformer bind:handle={transformer} />
-	</Layer>
-</Stage>
-
+<div bind:this={canvasParentDiv} id="canvasparentdiv" class="w-full">
+	<Stage
+		class="bg-gray-500"
+		config={{
+			width: canvasParentDiv?.clientWidth || 800,
+			height: canvasParentDiv?.clientHeight || 800,
+			x: 10,
+			y: 10,
+			clearBeforeDraw: true,
+			preventDefault: true,
+			visible: true
+		}}
+		on:mousedown={handleStageMouseDown}
+		on:touchstart={handleStageMouseDown}
+		staticConfig
+	>
+		<Layer bind:handle={layerKonva}>
+			{#each konvaShapes as konvaShape (konvaShape.name)}
+				{#if konvaShape.type === 'rect'}
+					<Rect config={konvaShape} on:transformend={handleTransformEnd} />
+				{:else if konvaShape.type === 'image' && konvaShape.image}
+					<Image config={konvaShape} on:transformend={handleTransformEnd} />
+				{:else if konvaShape.type === 'text' && konvaShape.image}
+					<Text config={konvaShape} on:transformend={handleTransformEnd} />
+				{/if}
+			{/each}
+			<Transformer bind:handle={transformer} />
+		</Layer>
+	</Stage>
+</div>
 <button class="btn variant-filled" on:click={handleDelete}>Remove</button>
