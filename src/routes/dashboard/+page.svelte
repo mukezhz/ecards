@@ -7,7 +7,7 @@
 	import type { Stage as StageType } from 'konva/lib/Stage';
 	import { onMount } from 'svelte';
 	import type { KonvaEventObject } from 'konva/lib/Node';
-	import type { PageData, PageServerData } from './$types';
+	import type { PageServerData } from './$types';
 
 	onMount(() => {
 		const img = document.createElement('img');
@@ -65,7 +65,6 @@
 				image: img
 			}
 		];
-		console.log({ canvasParentDiv });
 	});
 	interface konvaShapeType {
 		type: string;
@@ -151,10 +150,6 @@
 	let canvasParentDiv: HTMLDivElement;
 
 	export let data: PageServerData;
-	if (data) {
-		console.log(data.post.posts);
-		console.log(data.post.title);
-	}
 	let stageKonva: StageType;
 	const handleSavetoPng = (event: Event) => {
 		const dataURL = stageKonva.toDataURL();
