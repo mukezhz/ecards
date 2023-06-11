@@ -4,13 +4,14 @@
 	import type { Image as ImageType } from 'konva/lib/shapes/Image';
 	import type { Rect as RectType } from 'konva/lib/shapes/Rect';
 	import type { Layer as LayerType } from 'konva/lib/Layer';
+	import type { Stage as StageType } from 'konva/lib/Stage';
 	import { onMount } from 'svelte';
 	import type { KonvaEventObject } from 'konva/lib/Node';
 	import type { PageData, PageServerData } from './$types';
 
 	onMount(() => {
 		const img = document.createElement('img');
-		img.src = 'https://konvajs.org/assets/yoda.jpg';
+		img.src = '/favicon.png';
 		konvaShapes = [
 			{
 				type: 'rect',
@@ -154,6 +155,20 @@
 		console.log(data.post.posts);
 		console.log(data.post.title);
 	}
+	let stageKonva: StageType;
+	const handleSavetoPng = (event: Event) => {
+		const dataURL = stageKonva.toDataURL();
+		downloadURI(dataURL, 'stage.png');
+	};
+	function downloadURI(uri: string, name: string) {
+		var link = document.createElement('a');
+		link.download = name;
+		link.href = uri;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+		// delete link;
+	}
 </script>
 
 <div bind:this={canvasParentDiv} id="canvasparentdiv" class="w-full">
@@ -170,7 +185,7 @@
 		}}
 		on:mousedown={handleStageMouseDown}
 		on:touchstart={handleStageMouseDown}
-		staticConfig
+		bind:handle={stageKonva}
 	>
 		<Layer bind:handle={layerKonva}>
 			{#each konvaShapes as konvaShape (konvaShape.name)}
@@ -187,3 +202,4 @@
 	</Stage>
 </div>
 <button class="btn variant-filled" on:click={handleDelete}>Remove</button>
+<button class="btn variant-filled" on:click={handleSavetoPng}>SaveToPNG</button>
