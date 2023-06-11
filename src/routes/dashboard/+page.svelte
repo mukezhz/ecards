@@ -6,6 +6,7 @@
 	import type { Layer as LayerType } from 'konva/lib/Layer';
 	import { onMount } from 'svelte';
 	import type { KonvaEventObject } from 'konva/lib/Node';
+	import type { PageData, PageServerData } from './$types';
 
 	onMount(() => {
 		const img = document.createElement('img');
@@ -147,6 +148,12 @@
 		renderKonva.remove();
 	}
 	let canvasParentDiv: HTMLDivElement;
+
+	export let data: PageServerData;
+	if (data) {
+		console.log(data.post.posts);
+		console.log(data.post.title);
+	}
 </script>
 
 <div bind:this={canvasParentDiv} id="canvasparentdiv" class="w-full">
