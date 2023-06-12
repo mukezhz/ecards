@@ -1,17 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Client, Account } from 'appwrite';
 	import { onMount } from 'svelte';
-	import {
-		PUBLIC_LOGIN_SUCCESS_URL,
-		PUBLIC_LOGIN_FAILURE_URL,
-		PUBLIC_APPWRITE_ENDPOINT,
-		PUBLIC_PROJECT_ID
-	} from '$env/static/public';
+	import { PUBLIC_LOGIN_SUCCESS_URL, PUBLIC_LOGIN_FAILURE_URL } from '$env/static/public';
+	import { account } from '$lib/client';
 
 	let loading = true;
-	const client = new Client();
-	const account = new Account(client);
 	const handleGithubLogin = () => {
 		account.createOAuth2Session('github', PUBLIC_LOGIN_SUCCESS_URL, PUBLIC_LOGIN_FAILURE_URL);
 	};
@@ -25,17 +18,16 @@
 				console.error({ err });
 			});
 	};
-	onMount(() => {
-		client.setEndpoint(PUBLIC_APPWRITE_ENDPOINT).setProject(PUBLIC_PROJECT_ID);
-
-		const promise = account.get();
-
-		promise.then((res) => {
-			if (res.status) {
-				loading = false;
+	onMount(async () => {
+		try {
+			const user = await account.get();
+			if (user) {
 				goto('/dashboard');
 			}
-		});
+		} catch (err) {
+			console.error({ err });
+		}
+		loading = false;
 	});
 </script>
 

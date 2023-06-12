@@ -19,7 +19,7 @@ export async function GET() {
 	);
 }
 
-export async function POST({ request }) {
+export async function POST({ request }: RequestEvent) {
 	const body = await request.json();
 	const { name, priority, published, trending, image, usedCount, createdBy } = body;
 
