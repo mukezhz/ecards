@@ -24,7 +24,6 @@ export async function POST({ request }) {
 	const { name, priority, published, trending, image, usedCount, createdBy } = body;
 
 	const id = ID.unique();
-	const now = new Date();
 	const categories = await databases.createDocument(
 		DB_CONSTANT.DATABASE,
 		DB_CONSTANT.CATEGORIES,
@@ -35,10 +34,8 @@ export async function POST({ request }) {
 			published,
 			trending,
 			image,
-			used_count: usedCount,
-			created_at: now,
-			updated_at: now,
-			owner_metadata: JSON.stringify({
+			usedCount,
+			ownerMetadata: JSON.stringify({
 				id,
 				name: createdBy
 			})
