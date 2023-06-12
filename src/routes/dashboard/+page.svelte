@@ -162,11 +162,11 @@
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
-		// delete link;
 	}
 </script>
 
-<div bind:this={canvasParentDiv} id="canvasparentdiv" class="w-full">
+<div id="canvasContainer" class="flex flex-col">
+<div  bind:this={canvasParentDiv} id="canvasparentdiv" >
 	<Stage
 		class="bg-gray-500"
 		config={{
@@ -195,6 +195,24 @@
 			<Transformer bind:handle={transformer} />
 		</Layer>
 	</Stage>
+
 </div>
-<button class="btn variant-filled" on:click={handleDelete}>Remove</button>
-<button class="btn variant-filled" on:click={handleSavetoPng}>SaveToPNG</button>
+	<button class="btn variant-filled" on:click={handleDelete}>Remove</button>
+	<button class="btn variant-filled" on:click={handleSavetoPng}>SaveToPNG</button>
+
+
+</div>
+
+
+<style>
+
+	#canvasContainer{
+		display: flex;
+		justify-content: space-between;
+		background: transparent;
+		height: 100vh;
+		margin-bottom: 2em;
+	}
+
+
+</style>

@@ -1,12 +1,23 @@
 <script lang="ts">
-	// The ordering of these imports is critical to your app working properly
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
-	// Most of your app wide CSS should be put in this file
 	import '../app.postcss';
-	import { AppShell } from '@skeletonlabs/skeleton';
-	import Header from '$lib/Header/Header.svelte';
+    import Navbar from "$lib/Navbar/Navbar.svelte";
+    import Sidebar from "$lib/sidebar/Sidebar.svelte";
+    import BreadCrumb from "$lib/navBreadCrumb/BreadCrumb.svelte";
 </script>
 
-<slot />
+
+<Navbar/>
+
+<div class="  	flex   ">
+    <Sidebar/>
+
+    <div
+            class="w-full    text-center text-sm  dark:bg-gray-700 bg-gray-100 overflow-y-hidden"
+            id="main-container"
+    >
+        <BreadCrumb />
+        <slot />
+    </div>
+</div>

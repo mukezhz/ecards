@@ -38,10 +38,16 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@popperjs/core": "^2.11.8",
 		"appwrite": "^11.0.0",
 		"canvas": "^2.11.2",
+		"classnames": "^2.3.2",
+		"flowbite": "^1.6.5",
+		"flowbite-svelte": "^0.37.5",
 		"konva": "^9.2.0",
 		"node-appwrite": "^9.0.0",
+		"svelte-carousel": "^1.0.25",
+		"svelte-icons": "^2.1.0",
 		"svelte-konva": "^0.2.0"
 	}
 }
