@@ -1,9 +1,6 @@
 <script>
-    import { onMount } from 'svelte';
 
     let isPageLoaded = true;
-
-
 
 
 </script>
@@ -16,14 +13,15 @@
 {:else}
     <div class="flex mt-4 ">
         <table class="shadow-lg text-sm w-full mx-5   bg-white  dark:bg-gray-800 dark:text-white text-black  ">
-            <tr id="templatesTableRow" >
+            <tr id="templatesTableRow">
                 <th class="bg-red-700 dark:bg-gray-800 ">
                     <!-- <label>
                     <input type="checkbox" class="checkbox" />
                 </label> -->
                 </th>
                 <th class="bg-red-700  text-white  px-8 py-2 text-center dark:bg-gray-800  "
-                >Id</th
+                >Id
+                </th
                 >
                 <th class="bg-red-700  text-white px-8 py-2 dark:bg-gray-800">Sticker Name</th>
                 <th class="bg-red-700  text-white px-8 py-2 dark:bg-gray-800">Priority</th>
