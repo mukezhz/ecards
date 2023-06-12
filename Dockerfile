@@ -6,14 +6,9 @@ RUN pnpm i
 COPY . .
 RUN pnpm build
 
-FROM gplane/pnpm:node18
+FROM node:18-alpine
 WORKDIR /svelte
-COPY --from=builder /app/package.json package.json
-COPY --from=builder /app/vite.config.ts vite.config.ts
-COPY --from=builder /app/svelte.config.js svelte.config.js
-COPY --from=builder /app/tsconfig.json tsconfig.json
+COPY --from=builder /app/package.json .
 COPY --from=builder /app/static static
-COPY --from=builder /app/.svelte-kit .svelte-kit
-RUN pnpm i -D vite
-RUN ls -la
-CMD ["pnpm", "preview", "--host", "0.0.0.0"]
+COPY --from=builder /app/build build
+CMD ["node", "build/index.js"]
