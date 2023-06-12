@@ -68,7 +68,7 @@
 			}
 		];
 	});
-	
+
 	let konvaShapes: konvaShapeType[] = [];
 
 	let transformer: TransformerType;
@@ -137,37 +137,82 @@
 
 	export let data: PageServerData;
 	let stageKonva: StageType;
+
+	let textVal: string = '';
+	let openEditor: boolean = false;
+
+	const handleKonvaELement = () => {
+		openEditor = !openEditor;
+	};
+
+	const changeInput = (e) => {
+		textVal = e.target.value;
+	};
+
+	const handleText = (e) => {
+		e.preventDefault();
+		const obj = konvaShapes.find((k) => k.type === 'text');
+		obj.text = textVal;
+		konvaShapes = [...konvaShapes, obj];
+		console.log(konvaShapes);
+	};
 </script>
 
-<div bind:this={canvasParentDiv} id="canvasparentdiv" class="w-full">
-	<Stage
-		class="bg-gray-500"
-		config={{
-			width: canvasParentDiv?.clientWidth || 800,
-			height: canvasParentDiv?.clientHeight || 800,
-			x: 10,
-			y: 10,
-			clearBeforeDraw: true,
-			preventDefault: true,
-			visible: true
-		}}
-		on:mousedown={handleStageMouseDown}
-		on:touchstart={handleStageMouseDown}
-		bind:handle={stageKonva}
-	>
-		<Layer bind:handle={layerKonva}>
-			{#each konvaShapes as konvaShape (konvaShape.name)}
-				{#if konvaShape.type === 'rect'}
-					<Rect config={konvaShape} on:transformend={handleTransformEnd} />
-				{:else if konvaShape.type === 'image' && konvaShape.image}
-					<Image config={konvaShape} on:transformend={handleTransformEnd} />
-				{:else if konvaShape.type === 'text' && konvaShape.image}
-					<Text config={konvaShape} on:transformend={handleTransformEnd} />
-				{/if}
-			{/each}
-			<Transformer bind:handle={transformer} />
-		</Layer>
-	</Stage>
+<div class="flex gap-5 p-5">
+	<div class="flex-[0.2]">
+		<span>Enter text here:<br /></span>
+		<form type="submit" on:submit={(e) => handleText(e)}>
+			<input class="p-1 text-black" on:input={(e) => changeInput(e)} />
+		</form>
+	</div>
+	<div bind:this={canvasParentDiv} id="canvasparentdiv" class="flex-[0.6]">
+		<Stage
+			class="bg-gray-500"
+			config={{
+				width: canvasParentDiv?.clientWidth || 800,
+				height: canvasParentDiv?.clientHeight || 800,
+				x: 10,
+				y: 10,
+				clearBeforeDraw: true,
+				preventDefault: true,
+				visible: true
+			}}
+			on:mousedown={handleStageMouseDown}
+			on:touchstart={handleStageMouseDown}
+		>
+			<Layer bind:handle={layerKonva}>
+				{#each konvaShapes as konvaShape (konvaShape.name)}
+					{#if konvaShape.type === 'rect'}
+						<Rect
+							config={konvaShape}
+							on:transformend={handleTransformEnd}
+							on:click={handleKonvaELement}
+						/>
+					{:else if konvaShape.type === 'image' && konvaShape.image}
+						<Image
+							config={konvaShape}
+							on:transformend={handleTransformEnd}
+							on:click={handleKonvaELement}
+						/>
+					{:else if konvaShape.type === 'text' && konvaShape.image}
+						<Text
+							config={konvaShape}
+							on:transformend={handleTransformEnd}
+							on:click={handleKonvaELement}
+						/>
+					{/if}
+				{/each}
+				<Transformer bind:handle={transformer} />
+			</Layer>
+		</Stage>
+	</div>
+	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'}`}>
+		<div>Font color</div>
+		<div>Font color</div>
+		<div>Font color</div>
+		<div>Font color</div>
+		<div>Font color</div>
+	</div>
 </div>
 <button class="btn variant-filled" on:click={handleDelete}>Remove</button>
 <button class="btn variant-filled" on:click={() => handleSavetoPng(stageKonva)}>SaveToPNG</button>
