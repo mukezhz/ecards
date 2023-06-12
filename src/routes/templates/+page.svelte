@@ -10,6 +10,8 @@
 	import type { PageServerData } from './$types';
 	import { handleSavetoPng } from '$lib/utils/download';
 	import type { konvaShapeType } from '$lib/types/template';
+	import { Canvas } from 'konva/lib/Canvas';
+	import { text } from '@sveltejs/kit';
 
 	onMount(() => {
 		const img = document.createElement('img');
@@ -145,15 +147,32 @@
 		openEditor = !openEditor;
 	};
 
-	const changeInput = (e) => {
-		textVal = e.target.value;
+	const changeInput = (e: Event) => {
+		const target = e.target as unknown as HTMLInputElement;
+		textVal = target.value;
 	};
 
-	const handleText = (e) => {
-		e.preventDefault();
-		const obj = konvaShapes.find((k) => k.type === 'text');
-		obj.text = textVal;
-		konvaShapes = [...konvaShapes, obj];
+	const handleText = (e: Event) => {
+		if (!textVal) return;
+		if (!konvaShapes) return;
+		konvaShapes = [
+			...konvaShapes,
+			{
+				type: 'text',
+				rotation: 0,
+				x: 150,
+				y: 150,
+				scaleX: 1,
+				scaleY: 1,
+				name: crypto.randomUUID(),
+				draggable: true,
+				fill: 'white',
+				fontFamily: 'Calibri',
+				fontSize: 30,
+				text: textVal,
+				image: document.createElement('img')
+			}
+		];
 		console.log(konvaShapes);
 	};
 </script>
@@ -161,8 +180,9 @@
 <div class="flex gap-5 p-5">
 	<div class="flex-[0.2]">
 		<span>Enter text here:<br /></span>
-		<form type="submit" on:submit={(e) => handleText(e)}>
+		<form on:submit|preventDefault={handleText}>
 			<input class="p-1 text-black" on:input={(e) => changeInput(e)} />
+			<!-- <button type="submit">Enter</button> -->
 		</form>
 	</div>
 	<div bind:this={canvasParentDiv} id="canvasparentdiv" class="flex-[0.6]">
