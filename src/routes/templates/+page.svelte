@@ -149,7 +149,7 @@
 	};
 
 	const handleDimension = (e: Event, side: string) => {
-		const target = e.target as unknown as HTMLInputElement
+		const target = e.target as unknown as HTMLInputElement;
 		let width, height;
 		if (side === 'x') {
 			width = target.value;
@@ -171,7 +171,7 @@
 				fill: 'green',
 				name: 'rect2',
 				draggable: true,
-				image: document.createElement("img")
+				image: document.createElement('img')
 			}
 		];
 	};
@@ -197,8 +197,54 @@
 				scaleY: 1,
 				name: crypto.randomUUID(),
 				draggable: true,
-				fill: "#B71D1C",
+				fill: '#B71D1C',
 				fontFamily: 'Calibri',
+				fontSize: 30,
+				text: textVal,
+				image: document.createElement('img')
+			}
+		];
+	};
+
+	const handleBold = () => {
+		if (!colorVal) return;
+		if (!konvaShapes) return;
+		konvaShapes = [
+			...konvaShapes,
+			{
+				type: 'text',
+				rotation: 0,
+				x: 150,
+				y: 150,
+				scaleX: 1,
+				scaleY: 1,
+				name: crypto.randomUUID(),
+				draggable: true,
+				fill: colorVal,
+				fontFamily: 'Calibri',
+				fontSize: 30,
+				text: textVal,
+				image: document.createElement('img')
+			}
+		];
+	};
+
+	const handleFontSize = () => {};
+
+	const handleFontFamily = (e: HTMLInputElement) => {
+		if (!konvaShapes) return;
+		konvaShapes = [
+			{
+				type: 'text',
+				rotation: 0,
+				x: 150,
+				y: 150,
+				scaleX: 1,
+				scaleY: 1,
+				name: crypto.randomUUID(),
+				draggable: true,
+				fill: 'white',
+				fontFamily: e.target.value,
 				fontSize: 30,
 				text: textVal,
 				image: document.createElement('img')
@@ -212,7 +258,10 @@
 		<div>
 			<span>Enter text here:<br /></span>
 			<form on:submit|preventDefault={handleText}>
-				<input class="p-1 text-black" on:input={(e) => changeInput(e)} />
+				<input
+					class="py-1 px-2 text-black outline-none rounded-md"
+					on:input={(e) => changeInput(e)}
+				/>
 				<!-- <button type="submit">Enter</button> -->
 			</form>
 		</div>
@@ -266,23 +315,52 @@
 	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'} ml-1`}>
 		{#if konvaType === 'text'}
 			<div>
-				<h3>Font Style</h3>
+				<h3>Font Style:</h3>
 				<div class="gap-5 mt-3">
-					<button class="border border-white rounded-lg p-1">Bold</button>
-					<button class="border border-white rounded-lg p-1 ml-1">Bold Italics</button>
-					<button class="border border-white rounded-lg p-1 ml-1">Italics</button>
-					<button class="border border-white rounded-lg p-1 ml-1">Normal</button>
+					<button class="border border-white rounded-lg p-1" onClick={handleBold}>Bold</button>
+					<button class="border border-white rounded-lg p-1 ml-2">Bold Italics</button>
+					<button class="border border-white rounded-lg p-1 ml-2">Italics</button>
+					<button class="border border-white rounded-lg p-1 ml-2">Normal</button>
 				</div>
 			</div>
-			<div class="mt-10">
-				<h3>Font Color</h3>
-				<form class="flex gap-5 mt-3" on:submit|preventDefault={handleTextColor}>
+			<div class="mt-7">
+				<h3>Font Color:</h3>
+				<form class="flex gap-5 mt-" on:submit|preventDefault={handleTextColor}>
 					<input
 						type="color"
 						on:change={(e) => changeInputColor(e)}
-						class="h-7 flex items-center rounded justify-center self-center border-1 text-white border-gray-500 w-16 dark:text-gray-800"
+						class="h-7 flex items-center outline-none rounded justify-center self-center border-1 text-white border-gray-500 w-16 dark:text-gray-800"
 					/>
 				</form>
+			</div>
+
+			<div class="mt-7">
+				<h3>Font Size</h3>
+				<form class="flex gap-5 mt-2" on:submit|preventDefault={handleFontSize}>
+					<input
+						class="w-10 py-1 px-2 text-black outline-none rounded-md"
+						on:input|preventDefault={(e) => handleDimension(e, 'x')}
+					/>
+				</form>
+			</div>
+
+			<div class="mt-7">
+				<h3>Font Family</h3>
+				<select
+					name="selectFontFamily"
+					id="fontInput"
+					on:change|preventDefault={(e) => handleFontFamily(e)}
+					class="text-black w-40 h-10 rounded text-sm p-2"
+				>
+					<option> Serif </option>
+					<option> Brush Script MT </option>
+					<option> Cursive </option>
+					<option> Lucida Handwriting </option>
+					<option> Sans-Serif </option>
+					<option> Garamond </option>
+					<option> Verdana </option>
+					<option> Courier New </option>
+				</select>
 			</div>
 		{:else if konvaType === 'image' || konvaType === 'rect'}
 			<div>
@@ -306,7 +384,7 @@
 					</div>
 				</div>
 
-				<div class="mt-10">
+				<div class="mt-7">
 					<h3>Dimension</h3>
 					<div class="flex gap-5 mt-3">
 						<div class="flex items-center gap-1">
