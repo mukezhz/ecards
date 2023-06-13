@@ -6,11 +6,21 @@ import {AppwriteException} from "node-appwrite";
 
 export async function GET({params}: RequestEvent) {
     const id = params.id;
-    const data = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.CATEGORIES, id);
-    return json({
-        message: 'success',
-        data: data
-    });
+    try {
+        const data = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.CATEGORIES, id);
+        return json({
+            message: 'success',
+            data: data
+        });
+    } catch (e: unknown) {
+        if (e instanceof AppwriteException)
+            return json({
+                message: 'error',
+                data: null
+            }, {
+                status: 404
+            });
+    }
 }
 
 export async function PUT({request, params}: RequestEvent) {
@@ -44,7 +54,7 @@ export async function PUT({request, params}: RequestEvent) {
                 message: "error!!!",
                 data: e.response
             }, {
-                status: 400
+                status: e.code || 400
             })
         }
     }
