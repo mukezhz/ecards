@@ -15,15 +15,14 @@ export async function GET() {
 export async function POST({request}: RequestEvent) {
     const body = await request.json();
     const {priority, published, trending, usedCount, createdBy, message, categoryId} = body;
-    const category = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.CATEGORIES, categoryId)
     const id = ID.unique();
-    const messageDoc = await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.MESSAGES, id, {
+    const doc = await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.MESSAGES, id, {
         priority, published, trending, usedCount, owner: createdBy, message, categoryId
     });
     return json({
         message: 'success!!!',
         data: {
-            id: messageDoc.$id
+            id: doc.$id
         }
     });
 }
