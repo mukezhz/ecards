@@ -199,12 +199,12 @@
 		];
 	};
 
-	const handleDimension=(e: HTMLInputElement, side: string)=>{
+	const handleDimension = (e: HTMLInputElement, side: string) => {
 		let width, height;
-		if(side === "x"){
-			width= e.target.value
-		}else{
-			height=e.target.value
+		if (side === 'x') {
+			width = e.target.value;
+		} else {
+			height = e.target.value;
 		}
 		if (!konvaShapes) return;
 		konvaShapes = [
@@ -222,9 +222,39 @@
 				name: 'rect2',
 				draggable: true,
 				image: img
-			},
+			}
 		];
-	}
+	};
+
+	let colorVal: string;
+	const changeInputColor = (e: Event) => {
+		const target = e.target as unknown as HTMLInputElement;
+		colorVal = target.value;
+		console.log(colorVal);
+	};
+
+	const handleTextColor = () => {
+		if (!colorVal) return;
+		if (!konvaShapes) return;
+		konvaShapes = [
+			...konvaShapes,
+			{
+				type: 'text',
+				rotation: 0,
+				x: 150,
+				y: 150,
+				scaleX: 1,
+				scaleY: 1,
+				name: crypto.randomUUID(),
+				draggable: true,
+				fill: "#B71D1C",
+				fontFamily: 'Calibri',
+				fontSize: 30,
+				text: textVal,
+				image: document.createElement('img')
+			}
+		];
+	};
 </script>
 
 <div class="flex gap-3 p-5">
@@ -294,17 +324,55 @@
 					<button class="border border-white rounded-lg p-1 ml-1">Normal</button>
 				</div>
 			</div>
+			<div class="mt-10">
+				<h3>Font Color</h3>
+				<form class="flex gap-5 mt-3" on:submit|preventDefault={handleTextColor}>
+					<input
+						type="color"
+						on:change={(e) => changeInputColor(e)}
+						class="h-7 flex items-center rounded justify-center self-center border-1 text-white border-gray-500 w-16 dark:text-gray-800"
+					/>
+				</form>
+			</div>
 		{:else if konvaType === 'image' || konvaType === 'rect'}
 			<div>
-				<h3>Position</h3>
-				<div class="flex gap-5 mt-3">
-					<div class="flex items-center gap-1">
-						<h3>X:&nbsp;</h3>
-						<input class="w-10 p-1 text-black" on:change|preventDefault={()=>handleDimension(e, "x")} />
+				<div>
+					<h3>Position</h3>
+					<div class="flex gap-5 mt-3">
+						<div class="flex items-center gap-1">
+							<h3>X:&nbsp;</h3>
+							<input
+								class="w-10 p-1 text-black"
+								on:input|preventDefault={(e) => handleDimension(e, 'x')}
+							/>
+						</div>
+						<div class="flex items-center gap-1">
+							<h3>Y:&nbsp;</h3>
+							<input
+								class="w-10 p-1 text-black"
+								on:input|preventDefault={(e) => handleDimension(e, 'y')}
+							/>
+						</div>
 					</div>
-					<div class="flex items-center gap-1">
-						<h3>Y:&nbsp;</h3>
-						<input class="w-10 p-1 text-black" on:change|preventDefault={()=>handleDimension(e, "y")} />
+				</div>
+
+				<div class="mt-10">
+					<h3>Dimension</h3>
+					<div class="flex gap-5 mt-3">
+						<div class="flex items-center gap-1">
+							<h3>Width:&nbsp;</h3>
+							<input
+								class="w-10 p-1 text-black rounded-md"
+								on:input|preventDefault={(e) => handleDimension(e, 'x')}
+							/>
+						</div>
+						<div class="flex items-center gap-1">
+							<h3>Height:&nbsp;</h3>
+							<input
+								class="w-10 p-1 text-black rounded-md"
+								on:input|preventDefault={(e) => handleDimension(e, 'y')}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
