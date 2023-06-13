@@ -10,8 +10,6 @@
 	import type { PageServerData } from './$types';
 	import { handleSavetoPng } from '$lib/utils/download';
 	import type { konvaShapeType } from '$lib/types/template';
-	import { Canvas } from 'konva/lib/Canvas';
-	import { text } from '@sveltejs/kit';
 
 	onMount(() => {
 		const img = document.createElement('img');
