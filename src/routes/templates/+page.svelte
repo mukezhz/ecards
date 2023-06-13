@@ -141,10 +141,13 @@
 	let stageKonva: StageType;
 
 	let textVal: string = '';
+	let fileVal;
 	let openEditor: boolean = false;
+	let konvaType: string = 'text';
 
-	const handleKonvaELement = () => {
+	const handleKonvaELement = (type) => {
 		openEditor = !openEditor;
+		konvaType = type;
 	};
 
 	const changeInput = (e: Event) => {
@@ -173,17 +176,46 @@
 				image: document.createElement('img')
 			}
 		];
-		console.log(konvaShapes);
+	};
+
+	const handleImage = (event: HTMLInputElement) => {
+		const img = document.createElement('img');
+
+		if (event.target.files && event.target.files[0]) {
+			img.src = URL.createObjectURL(event.target.files[0]);
+		}
+
+		if (!konvaShapes) return;
+		konvaShapes = [
+			...konvaShapes,
+			{
+				type: 'image',
+				width: 300,
+				height: 300,
+				x: 100,
+				y: 100,
+				name: 'image',
+				draggable: true,
+				image: img
+			}
+		];
 	};
 </script>
 
-<div class="flex gap-5 p-5">
-	<div class="flex-[0.2]">
-		<span>Enter text here:<br /></span>
-		<form on:submit|preventDefault={handleText}>
-			<input class="p-1 text-black" on:input={(e) => changeInput(e)} />
-			<!-- <button type="submit">Enter</button> -->
-		</form>
+<div class="flex gap-3 p-5">
+	<div class="flex-[0.2] flex-col">
+		<div>
+			<span>Enter text here:<br /></span>
+			<form on:submit|preventDefault={handleText}>
+				<input class="p-1 text-black" on:input={(e) => changeInput(e)} />
+				<!-- <button type="submit">Enter</button> -->
+			</form>
+		</div>
+
+		<div class="mt-5">
+			<label for="myfile">Select a file:</label>
+			<input type="file" id="myfile" name="myfile" class="mt-2" on:change={(e) => handleImage(e)} />
+		</div>
 	</div>
 	<div bind:this={canvasParentDiv} id="canvasparentdiv" class="flex-[0.6]">
 		<Stage
@@ -206,19 +238,19 @@
 						<Rect
 							config={konvaShape}
 							on:transformend={handleTransformEnd}
-							on:click={handleKonvaELement}
+							on:click={() => handleKonvaELement(konvaShape.type)}
 						/>
 					{:else if konvaShape.type === 'image' && konvaShape.image}
 						<Image
 							config={konvaShape}
 							on:transformend={handleTransformEnd}
-							on:click={handleKonvaELement}
+							on:click={() => handleKonvaELement(konvaShape.type)}
 						/>
 					{:else if konvaShape.type === 'text' && konvaShape.image}
 						<Text
 							config={konvaShape}
 							on:transformend={handleTransformEnd}
-							on:click={handleKonvaELement}
+							on:click={() => handleKonvaELement(konvaShape.type)}
 						/>
 					{/if}
 				{/each}
@@ -226,12 +258,32 @@
 			</Layer>
 		</Stage>
 	</div>
-	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'}`}>
-		<div>Font color</div>
-		<div>Font color</div>
-		<div>Font color</div>
-		<div>Font color</div>
-		<div>Font color</div>
+	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'} ml-3`}>
+		{#if konvaType === 'text'}
+			<div>
+				<h3>Font Style</h3>
+				<div class="gap-5 mt-3">
+					<button class="border border-white rounded-lg p-1">Bold</button>
+					<button class="border border-white rounded-lg p-1 ml-1">Bold Italics</button>
+					<button class="border border-white rounded-lg p-1 ml-1">Italics</button>
+					<button class="border border-white rounded-lg p-1 ml-1">Normal</button>
+				</div>
+			</div>
+		{:else if konvaType === 'image'}
+			<div>
+				<h3>Position</h3>
+				<div class="flex gap-5 mt-3">
+					<div class="flex items-center gap-1">
+						<h3>X:&nbsp;</h3>
+						<input class="w-10 p-1 text-black" />
+					</div>
+					<div class="flex items-center gap-1">
+						<h3>Y:&nbsp;</h3>
+						<input class="w-10 p-1 text-black" />
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
 <button class="btn variant-filled" on:click={handleDelete}>Remove</button>
