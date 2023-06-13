@@ -40,12 +40,11 @@ export async function PUT({request, params}: RequestEvent) {
         });
     } catch (e) {
         if (e instanceof AppwriteException) {
-            return new Response(JSON.stringify({
-                message: "Error",
+            return json({
+                message: "error!!!",
                 data: e.response
-            }), {
-                status: 400,
-                headers: {"content-type": "application/json"}
+            }, {
+                status: 400
             })
         }
     }
