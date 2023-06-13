@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { PUBLIC_LOGIN_SUCCESS_URL, PUBLIC_LOGIN_FAILURE_URL } from '$env/static/public';
-	import { account } from '$lib/client';
+	import { account, client } from '$lib/client';
 
 	let loading = true;
 	const handleGithubLogin = () => {
@@ -20,6 +20,8 @@
 	};
 	onMount(async () => {
 		try {
+			// console.log(await account.createJWT());
+			client;
 			const user = await account.get();
 			if (user) {
 				goto('/dashboard');
