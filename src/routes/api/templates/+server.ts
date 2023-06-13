@@ -1,9 +1,9 @@
 import {databases} from '$lib/server/db';
 import {DB_CONSTANT} from '$lib/server/constant';
-import {AppwriteException, ID, Query} from 'node-appwrite';
+import {AppwriteException, Query} from 'node-appwrite';
 import {json} from '@sveltejs/kit';
 import type {RequestEvent} from './$types';
-import type {KonvaShapeType} from "$lib/types/template";
+import type {TemplatePayload} from "$lib/types/template";
 
 export async function GET({url}: RequestEvent) {
     const userId = url.searchParams.get("uid");
@@ -33,32 +33,47 @@ export async function GET({url}: RequestEvent) {
 }
 
 export async function POST({request}: RequestEvent) {
-    const body = await request.json();
-    const {konvaConfigs, owner, name}: { owner: string, name: string, konvaConfigs: KonvaShapeType[] } = body;
-    const id = ID.unique();
-    for (const konvaConfig of konvaConfigs) {
-            const {type, ...config} = konvaConfig
-            await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, id, {
-                type,
-                name,
-                config: JSON.stringify(config),
-                owner
-            });
+    try {
+        const body = await request.json();
+        const {konvaConfig, owner, name, templateId}: TemplatePayload = body;
+        const {type, id, ...config} = konvaConfig
+        const doc = await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}--${id}`, {
+            type,
+            name,
+            config: JSON.stringify(config),
+            owner,
+            templateId
+        });
+        return json({
+            message: 'success!!!',
+            data: {
+                id: doc.$id
+            }
+        });
+    } catch (e) {
+        if (e instanceof AppwriteException) {
+            return json({
+                message: "error!!!",
+                data: e.response
+            })
         }
-    return json({
-        message: 'success!!!',
-        data: {
-            total: konvaConfigs.length
-        }
-    });
+    }
 }
 
 export async function PUT({request}: RequestEvent) {
     const body = await request.json();
-    const {konvaConfigs, owner, name}: { owner: string, name: string, konvaConfigs: KonvaShapeType[] } = body;
+    const {konvaConfigs, owner, name, templateId}: TemplatePayload = body;
+    if (!konvaConfigs) return json({
+        message: "error!!!",
+        data: {
+            message: "config are not provided!!!"
+        },
+    }, {
+        status: 400
+    })
     for (const konvaConfig of konvaConfigs) {
-        const {type, name: shapeName, ...config} = konvaConfig
-        const template = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, shapeName, {
+        const {type, name: shapeName,id, ...config} = konvaConfig
+        await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}--${id}`, {
             type,
             name,
             config: JSON.stringify(config),

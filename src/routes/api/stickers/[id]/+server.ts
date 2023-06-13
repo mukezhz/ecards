@@ -2,7 +2,7 @@ import {databases} from '$lib/server/db';
 import {DB_CONSTANT} from '$lib/server/constant';
 import {json} from '@sveltejs/kit';
 import type {RequestEvent} from './$types';
-import {AppwriteException, ID} from "node-appwrite";
+import {AppwriteException} from "node-appwrite";
 
 export async function GET({params}: RequestEvent) {
     const id = params.id;
@@ -27,19 +27,30 @@ export async function PUT({request, params}: RequestEvent) {
     const body = await request.json();
     const id = params.id;
     const {priority, published, trending, usedCount, createdBy, image, categoryId} = body;
-    const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.STICKERS, id, {
-        published,
-        usedCount,
-        image,
-        priority,
-        owner: createdBy,
-        categoryId,
-        trending
-    });
-    return json({
-        message: 'success!!!',
-        data: {
-            id: doc.$id
+    try {
+        const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.STICKERS, id, {
+            published,
+            usedCount,
+            image,
+            priority,
+            owner: createdBy,
+            categoryId,
+            trending
+        });
+        return json({
+            message: 'success!!!',
+            data: {
+                id: doc.$id
+            }
+        });
+    } catch (e) {
+        if (e instanceof AppwriteException) {
+            return json({
+                message: "error!!!",
+                data: e.response
+            }, {
+                status: e.code || 500
+            })
         }
-    });
+    }
 }

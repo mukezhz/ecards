@@ -54,7 +54,7 @@ export async function PUT({request, params}: RequestEvent) {
 				message: "error!!!",
 				data: e.response
 			}, {
-				status: e.code || 400
+				status: e.code || 500
 			})
 		}
 	}
