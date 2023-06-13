@@ -22,7 +22,6 @@ export async function GET() {
 export async function POST({ request }: RequestEvent) {
 	const body = await request.json();
 	const { name, priority, published, trending, image, usedCount, createdBy } = body;
-
 	const id = ID.unique();
 	const categories = await databases.createDocument(
 		DB_CONSTANT.DATABASE,
@@ -35,10 +34,7 @@ export async function POST({ request }: RequestEvent) {
 			trending,
 			image,
 			usedCount,
-			ownerMetadata: JSON.stringify({
-				id,
-				name: createdBy
-			})
+			owner: createdBy
 		}
 	);
 	return json({
