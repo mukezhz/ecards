@@ -68,7 +68,7 @@
 			}
 		];
 	});
-	
+
 	let konvaShapes: konvaShapeType[] = [];
 
 	let transformer: TransformerType;
