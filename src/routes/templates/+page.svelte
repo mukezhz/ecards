@@ -144,7 +144,7 @@
 	let konvaType: string = 'text';
 
 	const handleKonvaELement = (type) => {
-		openEditor = !openEditor;
+		openEditor = true;
 		konvaType = type;
 	};
 
@@ -267,7 +267,7 @@
 					<button class="border border-white rounded-lg p-1 ml-1">Normal</button>
 				</div>
 			</div>
-		{:else if konvaType === 'image'}
+		{:else if konvaType === 'image' || konvaType === 'rect'}
 			<div>
 				<h3>Position</h3>
 				<div class="flex gap-5 mt-3">
