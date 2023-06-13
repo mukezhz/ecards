@@ -9,7 +9,7 @@
 	import type { KonvaEventObject } from 'konva/lib/Node';
 	import type { PageServerData } from './$types';
 	import { handleSavetoPng } from '$lib/utils/download';
-	import type { konvaShapeType } from '$lib/types/template';
+	import type { KonvaShapeType } from '$lib/types/template';
 
 	onMount(() => {
 		const img = document.createElement('img');
@@ -69,7 +69,7 @@
 		];
 	});
 
-	let konvaShapes: konvaShapeType[] = [];
+	let konvaShapes: KonvaShapeType[] = [];
 
 	let transformer: TransformerType;
 	let selectedShapeName = '';

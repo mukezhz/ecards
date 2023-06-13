@@ -6,10 +6,10 @@ import {json} from '@sveltejs/kit';
 
 export async function GET() {
     try {
-        const categories = await databases.listDocuments(DB_CONSTANT.DATABASE, DB_CONSTANT.CATEGORIES);
+        const docs = await databases.listDocuments(DB_CONSTANT.DATABASE, DB_CONSTANT.CATEGORIES);
         return json({
             message: 'success',
-            data: categories
+            data: docs
         })
     } catch (e) {
         if (e instanceof AppwriteException)
@@ -18,7 +18,6 @@ export async function GET() {
                 data: e.response
             });
     }
-
 }
 
 export async function POST({request}: RequestEvent) {

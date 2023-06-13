@@ -2,12 +2,13 @@ import {databases} from '$lib/server/db';
 import {DB_CONSTANT} from '$lib/server/constant';
 import {json} from '@sveltejs/kit';
 import type {RequestEvent} from './$types';
-import {AppwriteException, ID} from "node-appwrite";
+import {AppwriteException} from "node-appwrite";
+import type {KonvaShapeType} from "$lib/types/template";
 
 export async function GET({params}: RequestEvent) {
     const id = params.id;
     try {
-        const data = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.STICKERS, id);
+        const data = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, id);
         return json({
             message: 'success!!!',
             data: data
@@ -24,17 +25,14 @@ export async function GET({params}: RequestEvent) {
 }
 
 export async function PUT({request, params}: RequestEvent) {
-    const body = await request.json();
     const id = params.id;
-    const {priority, published, trending, usedCount, createdBy, image, categoryId} = body;
-    const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.STICKERS, id, {
-        published,
-        usedCount,
-        image,
-        priority,
-        owner: createdBy,
-        categoryId,
-        trending
+    const body = await request.json();
+    const {konvaConfig}: { konvaConfig: KonvaShapeType } = body;
+    const {type, name, ...config} = konvaConfig
+    const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, id, {
+        type,
+        name,
+        config: JSON.stringify(config),
     });
     return json({
         message: 'success!!!',

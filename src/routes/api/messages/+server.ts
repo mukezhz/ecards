@@ -1,15 +1,23 @@
 import {databases} from '$lib/server/db';
 import {DB_CONSTANT} from '$lib/server/constant';
-import {ID} from 'node-appwrite';
+import {AppwriteException, ID} from 'node-appwrite';
 import {json} from '@sveltejs/kit';
 import type {RequestEvent} from './$types';
 
 export async function GET() {
-    const data = await databases.listDocuments(DB_CONSTANT.DATABASE, DB_CONSTANT.MESSAGES);
-    return json({
-        message: 'success',
-        data: data
-    });
+    try {
+        const docs = await databases.listDocuments(DB_CONSTANT.DATABASE, DB_CONSTANT.MESSAGES);
+        return json({
+            message: 'success',
+            data: docs
+        })
+    } catch (e) {
+        if (e instanceof AppwriteException)
+            return json({
+                message: 'error',
+                data: e.response
+            });
+    }
 }
 
 export async function POST({request}: RequestEvent) {

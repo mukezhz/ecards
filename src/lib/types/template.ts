@@ -1,4 +1,4 @@
-export interface konvaShapeType {
+export interface KonvaShapeType {
 	type: string;
 	rotation?: number;
 	x: number;
