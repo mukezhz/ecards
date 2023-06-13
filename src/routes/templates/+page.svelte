@@ -198,6 +198,33 @@
 			}
 		];
 	};
+
+	const handleDimension=(e: HTMLInputElement, side: string)=>{
+		let width, height;
+		if(side === "x"){
+			width= e.target.value
+		}else{
+			height=e.target.value
+		}
+		if (!konvaShapes) return;
+		konvaShapes = [
+			...konvaShapes,
+			{
+				type: 'rect',
+				rotation: 0,
+				x: 150,
+				y: 150,
+				width: width ?? 100,
+				height: height ?? 100,
+				scaleX: 1,
+				scaleY: 1,
+				fill: 'green',
+				name: 'rect2',
+				draggable: true,
+				image: img
+			},
+		];
+	}
 </script>
 
 <div class="flex gap-3 p-5">
@@ -256,7 +283,7 @@
 			</Layer>
 		</Stage>
 	</div>
-	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'} ml-3`}>
+	<div class={`flex-[0.2] ${openEditor ? 'visible' : 'hidden'} ml-1`}>
 		{#if konvaType === 'text'}
 			<div>
 				<h3>Font Style</h3>
@@ -273,16 +300,17 @@
 				<div class="flex gap-5 mt-3">
 					<div class="flex items-center gap-1">
 						<h3>X:&nbsp;</h3>
-						<input class="w-10 p-1 text-black" />
+						<input class="w-10 p-1 text-black" on:change|preventDefault={()=>handleDimension(e, "x")} />
 					</div>
 					<div class="flex items-center gap-1">
 						<h3>Y:&nbsp;</h3>
-						<input class="w-10 p-1 text-black" />
+						<input class="w-10 p-1 text-black" on:change|preventDefault={()=>handleDimension(e, "y")} />
 					</div>
 				</div>
 			</div>
 		{/if}
 	</div>
 </div>
+
 <button class="btn variant-filled" on:click={handleDelete}>Remove</button>
 <button class="btn variant-filled" on:click={() => handleSavetoPng(stageKonva)}>SaveToPNG</button>
