@@ -25,7 +25,7 @@ export async function POST({request}: RequestEvent) {
     const body = await request.json();
     const {name, priority, published, trending, image, usedCount, createdBy} = body;
     const id = ID.unique();
-    const categories = await databases.createDocument(
+    const doc = await databases.createDocument(
         DB_CONSTANT.DATABASE,
         DB_CONSTANT.CATEGORIES,
         ID.unique(),
@@ -42,7 +42,7 @@ export async function POST({request}: RequestEvent) {
     return json({
         message: 'success!!!',
         data: {
-            id: categories.$id
+            id: doc.$id
         }
     });
 }

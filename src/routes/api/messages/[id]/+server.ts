@@ -9,13 +9,13 @@ export async function GET({ params }: RequestEvent) {
 	try {
 		const data = await databases.getDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.MESSAGES, id);
 		return json({
-			message: 'success',
+			message: 'success!!!',
 			data: data
 		});
 	} catch (e: unknown) {
 		if (e instanceof AppwriteException)
 			return json({
-				message: 'error',
+				message: 'error!!!',
 				data: null
 			}, {
 				status: 404
