@@ -36,8 +36,8 @@ export async function POST({request}: RequestEvent) {
     try {
         const body = await request.json();
         const {konvaConfig, owner, name, templateId}: TemplatePayload = body;
-        const {type, id, ...config} = konvaConfig
-        const doc = await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}--${id}`, {
+        const {type, name: id, ...config} = konvaConfig
+        const doc = await databases.createDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}-_-${id}`, {
             type,
             name,
             config: JSON.stringify(config),

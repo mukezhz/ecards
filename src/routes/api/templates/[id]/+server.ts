@@ -28,7 +28,7 @@ export async function PUT({request, params}: RequestEvent) {
     const templateId = params.id;
     const body = await request.json();
     const {konvaConfig, name,}: { name: string, konvaConfig: KonvaShapeType } = body;
-    const {type, id, ...config} = konvaConfig
+    const {type, name: id, ...config} = konvaConfig
     try {
         const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}--${id}`, {
             type,

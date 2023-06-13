@@ -14,59 +14,7 @@
 	onMount(() => {
 		const img = document.createElement('img');
 		img.src = '/favicon.png';
-		konvaShapes = [
-			{
-				type: 'rect',
-				rotation: 0,
-				x: 300,
-				y: 300,
-				width: 400,
-				height: 100,
-				scaleX: 1,
-				scaleY: 1,
-				fill: 'red',
-				name: 'rect1',
-				draggable: true,
-				image: img
-			},
-			{
-				type: 'rect',
-				rotation: 0,
-				x: 150,
-				y: 150,
-				width: 100,
-				height: 100,
-				scaleX: 1,
-				scaleY: 1,
-				fill: 'green',
-				name: 'rect2',
-				draggable: true,
-				image: img
-			},
-			{
-				type: 'text',
-				rotation: 0,
-				x: 150,
-				y: 150,
-				scaleX: 1,
-				scaleY: 1,
-				name: 'text',
-				draggable: true,
-				fill: 'white',
-				image: img,
-				fontFamily: 'Calibri',
-				fontSize: 30,
-				text: 'Hello world'
-			},
-			{
-				type: 'image',
-				x: 300,
-				y: 300,
-				name: 'yoda',
-				draggable: true,
-				image: img
-			}
-		];
+		konvaShapes = [] as KonvaShapeType[];
 	});
 
 	let konvaShapes: KonvaShapeType[] = [];
@@ -176,11 +124,12 @@
 		];
 	};
 
-	const handleImage = (event: HTMLInputElement) => {
+	const handleImage = (event: Event) => {
+		const target = event.target as unknown as HTMLInputElement;
 		const img = document.createElement('img');
 
-		if (event.target.files && event.target.files[0]) {
-			img.src = URL.createObjectURL(event.target.files[0]);
+		if (target.files.length > 0) {
+			img.src = URL.createObjectURL(target.files.item(0));
 		}
 
 		if (!konvaShapes) return;
@@ -199,12 +148,13 @@
 		];
 	};
 
-	const handleDimension = (e: HTMLInputElement, side: string) => {
+	const handleDimension = (e: Event, side: string) => {
+		const target = e.target as unknown as HTMLInputElement
 		let width, height;
 		if (side === 'x') {
-			width = e.target.value;
+			width = target.value;
 		} else {
-			height = e.target.value;
+			height = target.value;
 		}
 		if (!konvaShapes) return;
 		konvaShapes = [
@@ -221,7 +171,7 @@
 				fill: 'green',
 				name: 'rect2',
 				draggable: true,
-				image: img
+				image: document.createElement("img")
 			}
 		];
 	};
