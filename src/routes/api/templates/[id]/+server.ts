@@ -3,7 +3,6 @@ import {DB_CONSTANT} from '$lib/server/constant';
 import {json} from '@sveltejs/kit';
 import type {RequestEvent} from './$types';
 import {AppwriteException} from "node-appwrite";
-import type {KonvaShapeType} from "$lib/types/template";
 
 export async function GET({params}: RequestEvent) {
     const id = params.id;
@@ -25,16 +24,16 @@ export async function GET({params}: RequestEvent) {
 }
 
 export async function PUT({request, params}: RequestEvent) {
-    const templateId = params.id;
+    const id = params.id;
     const body = await request.json();
-    const {konvaConfig, name,}: { name: string, konvaConfig: KonvaShapeType } = body;
-    const {type, name: id, ...config} = konvaConfig
+    const {name, owner, published, trending, preview} = body;
     try {
-        const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, `${templateId}--${id}`, {
-            type,
+        const doc = await databases.updateDocument(DB_CONSTANT.DATABASE, DB_CONSTANT.TEMPLATES, id, {
             name,
-            config: JSON.stringify(config),
-            templateId
+            owner,
+            published,
+            trending,
+            preview
         });
         return json({
             message: 'success!!!',

@@ -17,9 +17,8 @@ export interface KonvaShapeType {
 }
 
 export interface TemplatePayload {
-    owner: string
-    name: string
+    type: string
     templateId: string
-    konvaConfig: KonvaShapeType
-    konvaConfigs?: KonvaShapeType[]
+    config: KonvaShapeType
+    configs?: KonvaShapeType[]
 }
